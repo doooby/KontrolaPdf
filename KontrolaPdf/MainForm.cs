@@ -19,11 +19,11 @@ namespace CheckPdf
         {
             InitializeComponent();
             this.ClientSize = Properties.Settings.Default.WindowSize;
-            System.Console.WriteLine(this.ClientSize.ToString());
         }
 
         public void actualizeCheckPdf()
         {
+            clearCheckPdf();
             string directory = textBox1.Text;
             if (directory.Length == 0 || !Directory.Exists(directory)) return;
 
@@ -31,19 +31,32 @@ namespace CheckPdf
             if (directory_info == null) return;
 
             int total_pages = 0;
-            dataGridView1.Rows.Clear();
+            long total_size = 0L;
             FileInfo[] files = directory_info.GetFiles("*.pdf");
 
             foreach (FileInfo fi in files)
             {
-                PdfSharp.Pdf.PdfDocument doc = PdfSharp.Pdf.IO.PdfReader.Open(fi.OpenRead());
+                FileStream stream = fi.OpenRead();
+                PdfSharp.Pdf.PdfDocument doc = PdfSharp.Pdf.IO.PdfReader.Open(stream);
                 long size = doc.FileSize;
                 total_pages += doc.PageCount;
+                total_size += size;
                 dataGridView1.Rows.Add(new object[]{ fi.Name, doc.PageCount.ToString(), longToMb(size).ToString("n2") });
+                stream.Close();
             }
 
             label3.Text = files.Length.ToString();
             label4.Text = total_pages.ToString();
+            label6.Text = String.Format("{0} MB", longToMb(total_size).ToString("n2"));
+        }
+
+        public void clearCheckPdf()
+        {
+            directory_info = null;
+            dataGridView1.Rows.Clear();
+            label3.Text = "";
+            label4.Text = "";
+            label6.Text = "";
         }
 
         public void exportToCsv()
@@ -103,16 +116,22 @@ namespace CheckPdf
             actualizeCheckPdf();
         }
 
-        // reload button
-        private void button3_Click(object sender, EventArgs e)
-        {
-            actualizeCheckPdf();
-        }
-
         // export to CSV button
         private void button2_Click(object sender, EventArgs e)
         {
             exportToCsv();
+        }
+
+        // key press on text box will (re)load
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) actualizeCheckPdf();
+        }
+
+        // (re)load button
+        private void button3_Click(object sender, EventArgs e)
+        {
+            actualizeCheckPdf();
         }
 
         // save window size on close
