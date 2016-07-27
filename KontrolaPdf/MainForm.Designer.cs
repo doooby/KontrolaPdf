@@ -1,4 +1,4 @@
-﻿namespace KontrolaPdf
+﻿namespace CheckPdf
 {
     partial class MainForm
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -69,8 +69,8 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView1.Size = new System.Drawing.Size(564, 378);
             this.dataGridView1.TabIndex = 2;
@@ -86,7 +86,6 @@
             this.textBox1.TabIndex = 3;
             this.textBox1.TabStop = false;
             this.textBox1.WordWrap = false;
-            this.textBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBox1_MouseDoubleClick);
             // 
             // label1
             // 
@@ -94,9 +93,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label1.Location = new System.Drawing.Point(6, 3);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(109, 16);
+            this.label1.Size = new System.Drawing.Size(75, 16);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Celkem souborů:";
+            this.label1.Text = "Files count:";
             // 
             // label2
             // 
@@ -104,9 +103,9 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label2.Location = new System.Drawing.Point(211, 3);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(110, 16);
+            this.label2.Size = new System.Drawing.Size(119, 16);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Celková velikost:";
+            this.label2.Text = "Total pages count:";
             // 
             // label3
             // 
@@ -180,7 +179,7 @@
             this.button1.Size = new System.Drawing.Size(90, 56);
             this.button1.TabIndex = 0;
             this.button1.TabStop = false;
-            this.button1.Text = "Vybrat složku";
+            this.button1.Text = "Select directory";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -193,7 +192,7 @@
             this.button2.Size = new System.Drawing.Size(90, 56);
             this.button2.TabIndex = 1;
             this.button2.TabStop = false;
-            this.button2.Text = "export do CSV";
+            this.button2.Text = "Export to CSV";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -219,19 +218,19 @@
             // 
             // Column1
             // 
-            this.Column1.HeaderText = "Soubor";
+            this.Column1.HeaderText = "File";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
             // 
             // Column2
             // 
-            this.Column2.HeaderText = "Počet stránek";
+            this.Column2.HeaderText = "Page count";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
             // 
             // Column3
             // 
-            this.Column3.HeaderText = "Velikost (MB)";
+            this.Column3.HeaderText = "Size (MB)";
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
             // 
@@ -244,7 +243,8 @@
             this.Controls.Add(this.left_panel);
             this.MinimumSize = new System.Drawing.Size(700, 300);
             this.Name = "MainForm";
-            this.Text = "KontrolaPdf";
+            this.Text = "CheckPdf";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();

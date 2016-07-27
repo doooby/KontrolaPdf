@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace KontrolaPdf
+namespace CheckPdf
 {
     public partial class MainForm : Form
     {
@@ -18,14 +18,19 @@ namespace KontrolaPdf
         public MainForm()
         {
             InitializeComponent();
-            //selectDirectory(@"C:\Users\user\Source\Repos\test_files"); // for testing
+            this.ClientSize = Properties.Settings.Default.WindowSize;
+            System.Console.WriteLine(this.ClientSize.ToString());
         }
 
-        public void actualizeKontrolaPdf()
+        public void actualizeCheckPdf()
         {
+            string directory = textBox1.Text;
+            if (directory.Length == 0 || !Directory.Exists(directory)) return;
+
+            directory_info = new DirectoryInfo(directory);
             if (directory_info == null) return;
 
-            long total_size = 0L;
+            int total_pages = 0;
             dataGridView1.Rows.Clear();
             FileInfo[] files = directory_info.GetFiles("*.pdf");
 
@@ -33,12 +38,12 @@ namespace KontrolaPdf
             {
                 PdfSharp.Pdf.PdfDocument doc = PdfSharp.Pdf.IO.PdfReader.Open(fi.OpenRead());
                 long size = doc.FileSize;
-                total_size += size;
+                total_pages += doc.PageCount;
                 dataGridView1.Rows.Add(new object[]{ fi.Name, doc.PageCount.ToString(), longToMb(size).ToString("n2") });
             }
 
             label3.Text = files.Length.ToString();
-            label4.Text = string.Format("{0} MB", longToMb(total_size).ToString("n2"));
+            label4.Text = total_pages.ToString();
         }
 
         public void exportToCsv()
@@ -77,25 +82,6 @@ namespace KontrolaPdf
             
         }
 
-        private void selectDirectory(string pre_selected_path=null)
-        {
-            if (pre_selected_path != null) {
-                directory_info = new DirectoryInfo(pre_selected_path);
-            }
-            else
-            {
-                FolderBrowserDialog d = new FolderBrowserDialog();
-                d.ShowNewFolderButton = false;
-                if (d.ShowDialog() == DialogResult.OK)
-                {
-                    directory_info = new DirectoryInfo(d.SelectedPath);
-                }
-            }
-
-            textBox1.Text = directory_info.FullName;
-            actualizeKontrolaPdf();
-        }
-
         private float longToMb(long bytes_count)
         {
             return (float)(Convert.ToDouble(bytes_count) / 1024d / 1024d);
@@ -104,29 +90,36 @@ namespace KontrolaPdf
         // select directory button
         private void button1_Click(object sender, EventArgs e)
         {
-            selectDirectory();
-        }
+            FolderBrowserDialog d = new FolderBrowserDialog();
+            if (Properties.Settings.Default.LastSelected.Length != 0)
+            {
+                d.SelectedPath = Properties.Settings.Default.LastSelected;
+            }
+            d.ShowNewFolderButton = false;
+            if (d.ShowDialog() != DialogResult.OK) return;
 
-        // directory textbox double-click
-        private void textBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            selectDirectory();
+            textBox1.Text = d.SelectedPath;
+            Properties.Settings.Default.LastSelected = d.SelectedPath;
+            actualizeCheckPdf();
         }
 
         // reload button
         private void button3_Click(object sender, EventArgs e)
         {
-            if (directory_info != null)
-            {
-                directory_info.Refresh();
-                actualizeKontrolaPdf();
-            }
+            actualizeCheckPdf();
         }
 
         // export to CSV button
         private void button2_Click(object sender, EventArgs e)
         {
             exportToCsv();
+        }
+
+        // save window size on close
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.WindowSize = this.ClientSize;
+            Properties.Settings.Default.Save();
         }
     }
 }
