@@ -37,11 +37,22 @@ namespace CheckPdf
             foreach (FileInfo fi in files)
             {
                 FileStream stream = fi.OpenRead();
-                PdfSharp.Pdf.PdfDocument doc = PdfSharp.Pdf.IO.PdfReader.Open(stream);
-                long size = doc.FileSize;
-                total_pages += doc.PageCount;
-                total_size += size;
-                dataGridView1.Rows.Add(new object[]{ fi.Name, doc.PageCount.ToString(), longToMb(size).ToString("n2") });
+                long size = total_size += stream.Length;
+                
+                PdfSharp.Pdf.PdfDocument doc = null;
+                string pages_count_text = null;
+                try
+                {
+                    doc = PdfSharp.Pdf.IO.PdfReader.Open(stream);
+                    total_pages += doc.PageCount;
+                    pages_count_text = doc.PageCount.ToString();
+                }
+                catch
+                {
+                    pages_count_text = "unknown";
+                }
+
+                dataGridView1.Rows.Add(new object[] { fi.Name, pages_count_text, longToMb(size).ToString("n2") });
                 stream.Close();
             }
 
@@ -89,10 +100,7 @@ namespace CheckPdf
                 }
 
                 File.WriteAllText(saveFileDialog1.FileName, sb.ToString());
-
             }
-
-            
         }
 
         private float longToMb(long bytes_count)
