@@ -37,7 +37,8 @@ namespace CheckPdf
             foreach (FileInfo fi in files)
             {
                 FileStream stream = fi.OpenRead();
-                long size = total_size += stream.Length;
+                long size = stream.Length;
+                total_size += size;
                 
                 PdfSharp.Pdf.PdfDocument doc = null;
                 string pages_count_text = null;

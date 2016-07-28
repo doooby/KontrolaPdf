@@ -1,0 +1,2 @@
+v2 - switch english, persistent settings, and re-work of textbox
+v3 - fix - size of file shows current total instead
